@@ -1,2 +1,2 @@
 # Chess-game
-As a computer science student  made my first project simple , while fulfilling every requirement 
+As a computer science student, I made my first project which is simple yet fulfill everything i need to learn
