@@ -10,7 +10,7 @@ image = {}
 def LoadImages():
     pieces = ["bR","bN","bB","bQ","bK","bp","wR","wN","wB","wQ","wK","wp"]
     for piece in pieces:
-        image[piece] = p.image.load(f"pics/{piece}.png")
+        image[piece] = p.image.load(f"chess-game/CHESS/main/pics/{piece}.png")
 
 
 def main():
