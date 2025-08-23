@@ -1,5 +1,5 @@
 import pygame as p
-import storage
+import storage , Movemake
 width = height = 512
 dime = 8
 sq_size = height // dime
@@ -26,59 +26,63 @@ def main():
     running = True
     sqsel = ()
     playerclick = []
+    playerone = True
+    playertwo = False
     while running:
-        for e in p.event.get():
-            if e.type == p.QUIT :
-                running = False
-            elif e.type == p.MOUSEBUTTONDOWN:
-                loc = p.mouse.get_pos()
-                col = loc[0]//sq_size
-                row = loc[1]//sq_size
-                if sqsel == (row , col):
-                    sqsel = ()
-                    playerclick = []
-                else :
-                    sqsel = (row,col)
-                    playerclick.append(sqsel)
-                
-                if len(playerclick) == 2 :
-                    move = storage.Move(playerclick[0], playerclick[1] , gs.board)
-                    print(move.getchessNotation())
-                    for i in range(len(valid)):
-                        if move == valid[i]:
-                            gs.makeMove(valid[i])
-                            movemade = True
-                            animate = True
-                            sqsel = ()
-                            playerclick = []
-                    if not movemade:
-                        playerclick = [sqsel]
-            
-
-            elif e.type == p.KEYDOWN:
-                if e.key == p.K_z:
-                    gs.undomove()
-                    movemade = True 
-                    animate = False
-                if e.key == p.K_r :
-                    gs = storage.GameState()
-                    valid = gs.validmoves()
-                    sqsel = ()
-                    playerclick = []
-                    movemade = False 
-                    animate = False
+        humanturn = (gs.whitetomove and playerone) or (not gs.whitetomove and playertwo)
+        if humanturn:
+            for e in p.event.get():
+                if e.type == p.QUIT :
+                    running = False
+                elif e.type == p.MOUSEBUTTONDOWN:
+                    loc = p.mouse.get_pos()
+                    col = loc[0]//sq_size
+                    row = loc[1]//sq_size
+                    if sqsel == (row , col):
+                        sqsel = ()
+                        playerclick = []
+                    else :
+                        sqsel = (row,col)
+                        playerclick.append(sqsel)
                     
+                    if len(playerclick) == 2 :
+                        move = storage.Move(playerclick[0], playerclick[1] , gs.board)
+                        print(move.getchessNotation())
+                        for i in range(len(valid)):
+                            if move == valid[i]:
+                                gs.makeMove(valid[i])
+                                movemade = True
+                                animate = True
+                                sqsel = ()
+                                playerclick = []
+                        if not movemade:
+                            playerclick = [sqsel]
+                
 
-        if movemade:
-            if animate:
-                animateit(gs.movelog[-1] , screen , gs.board , clock)
-            valid = gs.validmoves()
-            movemade = False
-            animate = False
+                elif e.type == p.KEYDOWN:
+                    if e.key == p.K_z:
+                        gs.undomove()
+                        movemade = True 
+                        animate = False
+                    if e.key == p.K_r :
+                        gs = storage.GameState()
+                        valid = gs.validmoves()
+                        sqsel = ()
+                        playerclick = []
+                        movemade = False 
+                        animate = False
+                        
 
-        drawGameState(screen , gs , valid , sqsel)
-        clock.tick(fps)
-        p.display.flip()
+            if movemade:
+                if animate:
+                    animateit(gs.movelog[-1] , screen , gs.board , clock)
+                valid = gs.validmoves()
+                movemade = False
+                animate = False
+
+            drawGameState(screen , gs , valid , sqsel)
+            clock.tick(fps)
+            p.display.flip()
 
 
 def highlightsquares(screen , gs , valid , sqsel):
