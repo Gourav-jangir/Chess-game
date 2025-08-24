@@ -73,6 +73,12 @@ def main():
                     movemade = False 
                     animate = False
                     
+        if not gameover and not humanturn:
+            aimoves = Movemake.randommove(valid)
+            gs.makeMove(aimoves)
+            movemade = True
+            animate = True
+
 
         if movemade:
             if animate:
