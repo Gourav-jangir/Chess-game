@@ -74,7 +74,9 @@ def main():
                     animate = False
                     
         if not gameover and not humanturn:
-            aimoves = Movemake.randommove(valid)
+            aimoves = Movemake.bestmove(gs , valid)
+            if aimoves is None:    
+                aimoves = Movemake.randommove(valid)
             gs.makeMove(aimoves)
             movemade = True
             animate = True

@@ -163,7 +163,14 @@ class GameState:
         else:
             moves = self.possiblemoves() 
 
-        self.enpassant = tenpassant       
+        self.enpassant = tenpassant  
+
+        if len(moves) == 0:
+            if self.incheck == True :
+                self.checkmate = True
+            else :
+                self.stalemate = True
+                 
         
         return moves
 
