@@ -9,21 +9,29 @@ def randommove(validmoves):
 
 def bestmove(gs , validmoves):
     turnmultiplier = 1 if gs.whitetomove else -1
-    maxscore = -checkmate
-    bestmove = None
+    minmaxscore = checkmate
+    bestplayermove = None
+    random.shuffle(validmoves)
     for playermove in validmoves:
         gs.makeMove(playermove)
-        if gs.checkmate :
-            score = checkmate
-        elif gs.stalemate:
-            score = stalemate
-        else:
-            score = turnmultiplier * scorematerial(gs.board)
-        if score > maxscore:
-            maxscore = score
-            bestmove = playermove
+        oppmoves = gs.validmoves()
+        oppmaxscore = -checkmate
+        for oppmove in oppmoves:
+            gs.makeMove(oppmove)
+            if gs.checkmate :
+                score = -turnmultiplier * checkmate
+            elif gs.stalemate:
+                score = stalemate
+            else:
+                score = -turnmultiplier * scorematerial(gs.board)
+            if score > oppmaxscore:
+                maxscore = score
+            gs.undomove()
+        if minmaxscore > oppmaxscore:
+            minmaxscore = oppmaxscore
+            bestplayermove = playermove
         gs.undomove()
-    return bestmove
+    return bestplayermove
 
 def scorematerial(board):
     score = 0
