@@ -15,18 +15,23 @@ def bestmove(gs , validmoves):
     for playermove in validmoves:
         gs.makeMove(playermove)
         oppmoves = gs.validmoves()
-        oppmaxscore = -checkmate
-        for oppmove in oppmoves:
-            gs.makeMove(oppmove)
-            if gs.checkmate :
-                score = -turnmultiplier * checkmate
-            elif gs.stalemate:
-                score = stalemate
-            else:
-                score = -turnmultiplier * scorematerial(gs.board)
-            if score > oppmaxscore:
-                maxscore = score
-            gs.undomove()
+        if gs.checkmate :
+            oppmaxscore = -checkmate
+        elif gs.stalemate:
+            score = stalemate
+        else:
+            oppmaxscore = -checkmate
+            for oppmove in oppmoves:
+                gs.makeMove(oppmove)
+                if gs.checkmate :
+                    score = -turnmultiplier * checkmate
+                elif gs.stalemate:
+                    score = stalemate
+                else:
+                    score = -turnmultiplier * scorematerial(gs.board)
+                if score > oppmaxscore:
+                    maxscore = score
+                gs.undomove()
         if minmaxscore > oppmaxscore:
             minmaxscore = oppmaxscore
             bestplayermove = playermove
