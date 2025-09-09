@@ -43,7 +43,8 @@ def bestmove(gs , validmoves):
 def bestplayerminmax(gs , validmoves):
     global nextmove
     nextmove = None
-    playerminmax(gs , validmoves , Depth , gs.whitetomove)
+    #playerminmax(gs , validmoves , Depth , gs.whitetomove)
+    negamax(gs , validmoves , Depth , 1 if gs.whitetomove else -1)
     return nextmove
 
 def playerminmax(gs , validmoves , depth , whitetomove):
@@ -74,6 +75,22 @@ def playerminmax(gs , validmoves , depth , whitetomove):
             gs.undomove()
         return minscore
 
+def negamax(gs , validmoves , depth , turnmultiplier):
+    global nextmove
+    if depth == 0 :
+        return turnmultiplier * scoreboard(gs)
+    
+    maxscore = -checkmate
+    for move in validmoves:
+        gs.makeMove(move)
+        score = negamax(gs, gs.validmoves() , depth - 1 , - turnmultiplier)
+        if score < maxscore:
+            maxscore = score
+            if depth == Depth:
+                nextmove = move
+        
+        gs.undomove()
+    return maxscore
 
 def scoreboard(gs):
     if gs.checkmate:
