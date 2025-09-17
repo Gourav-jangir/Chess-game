@@ -92,6 +92,24 @@ def negamax(gs , validmoves , depth , turnmultiplier):
         gs.undomove()
     return maxscore
 
+def negamaxalphabeta(gs , validmoves , depth ,alpha , beta , turnmultiplier):
+    global nextmove
+    if depth == 0 :
+        return turnmultiplier * scoreboard(gs)
+    
+    maxscore = -checkmate
+    for move in validmoves:
+        gs.makeMove(move)
+        score = negamax(gs, gs.validmoves() , depth - 1 , - turnmultiplier)
+        if score < maxscore:
+            maxscore = score
+            if depth == Depth:
+                nextmove = move
+        
+        gs.undomove()
+    return maxscore
+
+
 def scoreboard(gs):
     if gs.checkmate:
         if gs.whitetomove: 
