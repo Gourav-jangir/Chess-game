@@ -44,7 +44,7 @@ def bestplayerminmax(gs , validmoves):
     global nextmove
     nextmove = None
     #playerminmax(gs , validmoves , Depth , gs.whitetomove)
-    negamax(gs , validmoves , Depth , 1 if gs.whitetomove else -1)
+    negamaxalphabeta(gs , validmoves , Depth , - checkmate , checkmate , 1 if gs.whitetomove else -1)
     return nextmove
 
 def playerminmax(gs , validmoves , depth , whitetomove):
@@ -56,7 +56,7 @@ def playerminmax(gs , validmoves , depth , whitetomove):
         maxscore = -checkmate
         for move in validmoves:
             gs.makeMove(move)
-            score = playerminmax(gs, gs.validmoves() , depth - 1 , False)
+            score = - playerminmax(gs, gs.validmoves() , depth - 1 , False)
             if score > maxscore:
                 maxscore = score
                 if depth == Depth:
@@ -83,7 +83,7 @@ def negamax(gs , validmoves , depth , turnmultiplier):
     maxscore = -checkmate
     for move in validmoves:
         gs.makeMove(move)
-        score = negamax(gs, gs.validmoves() , depth - 1 , - turnmultiplier)
+        score = - negamax(gs, gs.validmoves() , depth - 1 , - turnmultiplier)
         if score < maxscore:
             maxscore = score
             if depth == Depth:
@@ -100,13 +100,17 @@ def negamaxalphabeta(gs , validmoves , depth ,alpha , beta , turnmultiplier):
     maxscore = -checkmate
     for move in validmoves:
         gs.makeMove(move)
-        score = negamax(gs, gs.validmoves() , depth - 1 , - turnmultiplier)
+        score = - negamaxalphabeta(gs, gs.validmoves() ,depth - 1 , -beta , -alpha , - turnmultiplier)
         if score < maxscore:
             maxscore = score
             if depth == Depth:
                 nextmove = move
         
         gs.undomove()
+        if maxscore > alpha:
+            alpha = maxscore
+        if alpha >= beta:
+            break
     return maxscore
 
 
